@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from '@jest/globals';
 
 import {
+  defaultRegion,
   formatInviteCode,
   isRegionAvailable,
   loadSavedRegion,
@@ -27,9 +28,23 @@ describe('invite codes', () => {
 });
 
 describe('region config', () => {
-  const saved = { ...process.env };
+  // Restore the variables on the same process.env object: Expo's Babel preset
+  // makes region.ts read that exact object, so replacing it would have no effect.
+  const names = [
+    'EXPO_PUBLIC_SUPABASE_US_URL',
+    'EXPO_PUBLIC_SUPABASE_US_PUBLISHABLE_KEY',
+    'EXPO_PUBLIC_SUPABASE_CN_URL',
+    'EXPO_PUBLIC_SUPABASE_CN_PUBLISHABLE_KEY',
+  ];
+  const saved = Object.fromEntries(names.map((name) => [name, process.env[name]]));
   afterEach(() => {
-    process.env = { ...saved };
+    for (const name of names) {
+      if (saved[name] === undefined) {
+        delete process.env[name];
+      } else {
+        process.env[name] = saved[name];
+      }
+    }
   });
 
   test('a region is available only when its URL and key are both set', () => {
@@ -39,6 +54,20 @@ describe('region config', () => {
 
     process.env.EXPO_PUBLIC_SUPABASE_CN_PUBLISHABLE_KEY = 'key';
     expect(isRegionAvailable('cn')).toBe(true);
+  });
+
+  test('new families go to the US server when it is configured, else China', () => {
+    process.env.EXPO_PUBLIC_SUPABASE_US_URL = 'https://us.example.com';
+    process.env.EXPO_PUBLIC_SUPABASE_US_PUBLISHABLE_KEY = 'key';
+    expect(defaultRegion()).toBe('us');
+
+    delete process.env.EXPO_PUBLIC_SUPABASE_US_URL;
+    process.env.EXPO_PUBLIC_SUPABASE_CN_URL = 'https://cn.example.com';
+    process.env.EXPO_PUBLIC_SUPABASE_CN_PUBLISHABLE_KEY = 'key';
+    expect(defaultRegion()).toBe('cn');
+
+    delete process.env.EXPO_PUBLIC_SUPABASE_CN_URL;
+    expect(defaultRegion()).toBeNull();
   });
 
   test('the chosen region is remembered', async () => {
