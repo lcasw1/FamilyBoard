@@ -244,6 +244,16 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# Family members sign in with a 6-digit code, not a link. New users get the
+# "confirmation" email and returning users the "magic_link" one; both show the code.
+[auth.email.template.confirmation]
+subject = "Family Board sign-in code / 家庭留言板验证码"
+content_path = "./supabase/templates/email-code.html"
+
+[auth.email.template.magic_link]
+subject = "Family Board sign-in code / 家庭留言板验证码"
+content_path = "./supabase/templates/email-code.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

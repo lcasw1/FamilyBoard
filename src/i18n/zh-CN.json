@@ -4,5 +4,19 @@
   },
   "home": {
     "placeholder": "正在设置，暂无内容。"
+  },
+  "errors": {
+    "generic": "出了点问题，请重试。",
+    "network": "无法连接服务器。请检查网络后重试。",
+    "not_allowed": "您没有权限执行此操作。",
+    "invalid_display_name": "请输入名字（最多 50 个字符）。",
+    "invalid_expiry": "邀请的有效期为 1 到 30 天。",
+    "invite_not_found": "找不到这个邀请码，请检查后重试。",
+    "invite_used": "这个邀请码已经用过了，请索取新的邀请码。",
+    "invite_expired": "这个邀请码已过期，请索取新的邀请码。",
+    "invite_role_not_allowed": "这台平板需要使用“显示屏”邀请码。",
+    "already_member": "您已经是这个家庭的成员了。",
+    "invalid_email_code": "验证码错误或已过期。请重试或重新获取验证码。",
+    "region_unavailable": "当前版本的应用暂时无法连接到该家庭的服务器。"
   }
 }
