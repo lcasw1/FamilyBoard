@@ -14,7 +14,9 @@
     "invite_role_not_allowed": "This tablet needs a display invite code.",
     "already_member": "You're already in this family.",
     "invalid_email_code": "That code is wrong or has expired. Try again or request a new code.",
-    "region_unavailable": "This version of the app can't connect to that family's server yet."
+    "region_unavailable": "This version of the app can't connect to that family's server yet.",
+    "camera_permission": "Family Board needs the camera to take a photo. You can allow it in the phone's Settings.",
+    "microphone_permission": "Family Board needs the microphone to record a voice message. You can allow it in the phone's Settings."
   },
   "common": {
     "continue": "Continue",
@@ -73,7 +75,6 @@
   },
   "home": {
     "greeting": "Hello, {{name}}",
-    "comingSoon": "Sending photos, voice messages and notes is coming next.",
     "invitesTitle": "Invite someone",
     "invite": {
       "sender": "Invite a family member",
@@ -85,6 +86,39 @@
     "share": "Share code",
     "shareMessage": "Join our Family Board: install the app and enter this invite code: {{code}}",
     "signOut": "Sign out"
+  },
+  "send": {
+    "title": "Send to Grandma",
+    "noteLabel": "Write a note",
+    "notePlaceholder": "For example: Good morning, Mom! We're thinking of you.",
+    "sendNote": "Send note",
+    "takePhoto": "Take photo",
+    "choosePhoto": "Choose photo",
+    "photoPreview": "The photo you are about to send",
+    "captionLabel": "Caption (optional)",
+    "captionPlaceholder": "For example: Lily at the park",
+    "sendPhoto": "Send photo",
+    "cancel": "Cancel",
+    "recordVoice": "Record a voice message",
+    "recording": "Recording… {{time}} (up to {{max}})",
+    "stopRecording": "Stop",
+    "recorded": "Voice message, {{time}}",
+    "listen": "Listen",
+    "stopListening": "Stop listening",
+    "sendVoice": "Send voice message",
+    "recordAgain": "Delete and record again"
+  },
+  "messages": {
+    "title": "Recent messages",
+    "empty": "No messages yet. Send the first one!",
+    "from": "{{name}} · {{time}}",
+    "formerMember": "Former member",
+    "hidden": "Hidden from Grandma's tablet",
+    "photo": "Photo",
+    "voice": "🎤 Voice message",
+    "delete": "Delete",
+    "deleteTitle": "Delete this message?",
+    "deleteBody": "It will be removed from Grandma's tablet too."
   },
   "display": {
     "waiting": "Messages from your family will appear here."

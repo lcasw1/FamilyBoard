@@ -34,7 +34,21 @@
           "imageWidth": 76
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Family Board uses your photos so you can send them to your family.",
+          "cameraPermission": "Family Board uses the camera so you can send photos to your family."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Family Board uses the microphone so you can record voice messages for your family.",
+          "enableBackgroundPlayback": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
