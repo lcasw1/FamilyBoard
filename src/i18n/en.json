@@ -4,5 +4,19 @@
   },
   "home": {
     "placeholder": "Setting up. Nothing to see yet."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Can't reach the server. Check the internet connection and try again.",
+    "not_allowed": "You don't have permission to do that.",
+    "invalid_display_name": "Please enter a name (up to 50 characters).",
+    "invalid_expiry": "Invites can last from 1 to 30 days.",
+    "invite_not_found": "That invite code wasn't found. Check it and try again.",
+    "invite_used": "That invite code has already been used. Ask for a new one.",
+    "invite_expired": "That invite code has expired. Ask for a new one.",
+    "invite_role_not_allowed": "This tablet needs a display invite code.",
+    "already_member": "You're already in this family.",
+    "invalid_email_code": "That code is wrong or has expired. Try again or request a new code.",
+    "region_unavailable": "This version of the app can't connect to that family's server yet."
   }
 }

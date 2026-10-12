@@ -1,0 +1,7 @@
+<!-- Sign-in code email. Used for both new and returning users (see config.toml).
+     The same template must be pasted into the hosted project's Auth > Email Templates. -->
+<h2>Family Board · 家庭留言板</h2>
+<p>Your sign-in code is:<br />您的登录验证码是：</p>
+<p style="font-size: 32px; font-weight: bold; letter-spacing: 6px">{{ .Token }}</p>
+<p>It works for one hour. If you didn't ask for it, you can ignore this email.<br />
+验证码一小时内有效。如果不是您本人操作，请忽略此邮件。</p>
