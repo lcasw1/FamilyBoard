@@ -2,7 +2,13 @@
 import { getCurrentRegion, supabase, switchRegion } from './client';
 import type { Tables } from './database.types';
 import { ApiError, throwIfError, unwrap } from './errors';
-import { isRegion, isRegionAvailable, regionFromInviteCode, type Region } from './region';
+import {
+  defaultRegion,
+  isRegion,
+  isRegionAvailable,
+  regionFromInviteCode,
+  type Region,
+} from './region';
 
 export type Role = 'display' | 'sender' | 'aide' | 'admin';
 export type DisplayLanguage = 'en' | 'zh-CN';
@@ -49,6 +55,16 @@ export async function switchRegionForInvite(code: string): Promise<Region> {
     throw new ApiError('invite_not_found');
   }
   if (!isRegionAvailable(region)) {
+    throw new ApiError('region_unavailable');
+  }
+  await switchRegion(region);
+  return region;
+}
+
+/** Switches to the server for a brand-new family. Call before signing in. */
+export async function switchRegionForNewFamily(): Promise<Region> {
+  const region = defaultRegion();
+  if (!region) {
     throw new ApiError('region_unavailable');
   }
   await switchRegion(region);

@@ -2,9 +2,6 @@
   "app": {
     "name": "家庭留言板"
   },
-  "home": {
-    "placeholder": "正在设置，暂无内容。"
-  },
   "errors": {
     "generic": "出了点问题，请重试。",
     "network": "无法连接服务器。请检查网络后重试。",
@@ -18,5 +15,78 @@
     "already_member": "您已经是这个家庭的成员了。",
     "invalid_email_code": "验证码错误或已过期。请重试或重新获取验证码。",
     "region_unavailable": "当前版本的应用暂时无法连接到该家庭的服务器。"
+  },
+  "common": {
+    "continue": "继续",
+    "tryAgain": "重试"
+  },
+  "languages": {
+    "en": "English",
+    "zh-CN": "中文"
+  },
+  "roles": {
+    "display": "显示平板",
+    "sender": "家庭成员",
+    "aide": "护工",
+    "admin": "管理员"
+  },
+  "welcome": {
+    "title": "欢迎",
+    "intro": "给奶奶的平板发送照片、语音和留言。",
+    "join": "加入我的家庭",
+    "create": "创建新家庭",
+    "tablet": "把这台平板设置给奶奶用"
+  },
+  "join": {
+    "title": "加入家庭",
+    "intro": "请输入家庭管理员发给您的邀请码。",
+    "codeLabel": "邀请码",
+    "nameLabel": "您的称呼（奶奶怎么叫您）",
+    "namePlaceholder": "例如：小丽"
+  },
+  "signIn": {
+    "title": "登录",
+    "intro": "我们会给您的邮箱发送一个 6 位验证码，不需要密码。",
+    "emailLabel": "邮箱",
+    "sendCode": "发送验证码",
+    "codeSent": "验证码已发送到 {{email}}，可能需要一分钟左右。",
+    "codeLabel": "6 位验证码",
+    "verify": "登录",
+    "resend": "重新发送验证码",
+    "changeEmail": "换一个邮箱"
+  },
+  "createFamily": {
+    "title": "创建新家庭",
+    "familyNameLabel": "家庭名称",
+    "familyNamePlaceholder": "例如：魏家",
+    "yourNameLabel": "您的称呼（奶奶怎么叫您）",
+    "languageLabel": "奶奶平板上显示的语言",
+    "create": "创建家庭"
+  },
+  "tabletSetup": {
+    "title": "设置奶奶的平板",
+    "intro": "请输入家庭管理员提供的平板邀请码。只需要设置一次。",
+    "codeLabel": "平板邀请码",
+    "nameLabel": "这台平板的名称",
+    "defaultName": "奶奶",
+    "submit": "设置平板"
+  },
+  "home": {
+    "greeting": "{{name}}，您好",
+    "comingSoon": "发送照片、语音和留言的功能即将推出。",
+    "invitesTitle": "邀请家人",
+    "invite": {
+      "sender": "邀请家庭成员",
+      "display": "奶奶平板的邀请码",
+      "aide": "邀请护工",
+      "admin": "邀请其他管理员"
+    },
+    "inviteExpires": "只能使用一次，有效期至 {{date}}。",
+    "share": "分享邀请码",
+    "shareMessage": "加入我们的家庭留言板：安装应用后输入邀请码 {{code}}",
+    "signOut": "退出登录"
+  },
+  "display": {
+    "waiting": "家人发来的消息会显示在这里。"
   }
 }

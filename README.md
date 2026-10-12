@@ -20,6 +20,31 @@ npm run test:integration  # src/api/ against the local database (needs npm run d
 npm run db:test           # database security tests
 ```
 
+## Running on Android
+
+One-time setup on a Mac:
+
+- Install Android Studio, and in its Device Manager create an emulator (or plug in an
+  Android phone with USB debugging on).
+- Install **JDK 17** (React Native's supported version), for example Eclipse Temurin 17
+  into `~/Library/Java/JavaVirtualMachines/`. Android Studio's bundled Java 25 makes the
+  native build fail with "A restricted method in java.lang.System has been called".
+- Add to `~/.zshrc`:
+
+  ```bash
+  export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+  export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
+  ```
+
+- In `.env.local`, the emulator reaches this Mac at `10.0.2.2`, not `127.0.0.1`:
+  `EXPO_PUBLIC_SUPABASE_US_URL=http://10.0.2.2:54321`. A real phone on Wi-Fi needs the
+  Mac's LAN address instead.
+
+Then `npx expo run:android` builds the app and installs it (the first build takes about
+10 minutes and several GB of disk). After that, `npx expo start` is enough until a
+native package is added.
+
 ## Local database
 
 Needs Docker Desktop running. The Supabase CLI is a dev dependency, so use `npx supabase`.

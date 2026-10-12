@@ -43,6 +43,16 @@ export function isRegionAvailable(region: Region): boolean {
   return configFromEnv()[region] !== null;
 }
 
+/**
+ * The server for someone starting a new family (no invite code to go by).
+ * The US server for now; once the China server exists, the app will ask.
+ */
+export function defaultRegion(): Region | null {
+  if (isRegionAvailable('us')) return 'us';
+  if (isRegionAvailable('cn')) return 'cn';
+  return null;
+}
+
 export function regionConfig(region: Region): RegionConfig {
   const config = configFromEnv()[region];
   if (!config) {

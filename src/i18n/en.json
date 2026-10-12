@@ -2,9 +2,6 @@
   "app": {
     "name": "Family Board"
   },
-  "home": {
-    "placeholder": "Setting up. Nothing to see yet."
-  },
   "errors": {
     "generic": "Something went wrong. Please try again.",
     "network": "Can't reach the server. Check the internet connection and try again.",
@@ -18,5 +15,78 @@
     "already_member": "You're already in this family.",
     "invalid_email_code": "That code is wrong or has expired. Try again or request a new code.",
     "region_unavailable": "This version of the app can't connect to that family's server yet."
+  },
+  "common": {
+    "continue": "Continue",
+    "tryAgain": "Try again"
+  },
+  "languages": {
+    "en": "English",
+    "zh-CN": "中文"
+  },
+  "roles": {
+    "display": "Display tablet",
+    "sender": "Family member",
+    "aide": "Aide",
+    "admin": "Admin"
+  },
+  "welcome": {
+    "title": "Welcome",
+    "intro": "Send photos, voice messages and notes to Grandma's tablet.",
+    "join": "Join my family",
+    "create": "Start a new family",
+    "tablet": "Set up this tablet for Grandma"
+  },
+  "join": {
+    "title": "Join your family",
+    "intro": "Enter the invite code a family admin sent you.",
+    "codeLabel": "Invite code",
+    "nameLabel": "Your name, as Grandma knows you",
+    "namePlaceholder": "For example: Lily"
+  },
+  "signIn": {
+    "title": "Sign in",
+    "intro": "We'll email you a 6-digit code. No password needed.",
+    "emailLabel": "Email",
+    "sendCode": "Email me a code",
+    "codeSent": "We sent a 6-digit code to {{email}}. It may take a minute to arrive.",
+    "codeLabel": "6-digit code",
+    "verify": "Sign in",
+    "resend": "Send a new code",
+    "changeEmail": "Use a different email"
+  },
+  "createFamily": {
+    "title": "Start a new family",
+    "familyNameLabel": "Family name",
+    "familyNamePlaceholder": "For example: The Wei family",
+    "yourNameLabel": "Your name, as Grandma knows you",
+    "languageLabel": "Language on Grandma's tablet",
+    "create": "Create family"
+  },
+  "tabletSetup": {
+    "title": "Set up Grandma's tablet",
+    "intro": "Enter the tablet invite code from the family admin. You only need to do this once.",
+    "codeLabel": "Tablet invite code",
+    "nameLabel": "Name for this tablet",
+    "defaultName": "Grandma",
+    "submit": "Set up tablet"
+  },
+  "home": {
+    "greeting": "Hello, {{name}}",
+    "comingSoon": "Sending photos, voice messages and notes is coming next.",
+    "invitesTitle": "Invite someone",
+    "invite": {
+      "sender": "Invite a family member",
+      "display": "Code for Grandma's tablet",
+      "aide": "Invite the aide",
+      "admin": "Invite another admin"
+    },
+    "inviteExpires": "Works once, until {{date}}.",
+    "share": "Share code",
+    "shareMessage": "Join our Family Board: install the app and enter this invite code: {{code}}",
+    "signOut": "Sign out"
+  },
+  "display": {
+    "waiting": "Messages from your family will appear here."
   }
 }

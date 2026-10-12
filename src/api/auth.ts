@@ -1,6 +1,6 @@
 // Signing in and out. Family members sign in with a 6-digit code sent by email.
 // Grandma's tablet signs in anonymously once, then joins with a display invite.
-import { supabase } from './client';
+import { restoreRegion, supabase } from './client';
 import { ApiError, throwIfError, toApiError } from './errors';
 
 /** Step 1 of email sign-in: email the user a 6-digit code. Creates the account if new. */
@@ -34,6 +34,15 @@ export async function signInDisplayDevice(): Promise<void> {
 
 export async function signOut(): Promise<void> {
   throwIfError(await supabase().auth.signOut());
+}
+
+/**
+ * Call once when the app starts. Picks up the server this device used last time
+ * and returns the signed-in user's id, or null if the device isn't set up yet.
+ */
+export async function restoreSession(): Promise<string | null> {
+  const region = await restoreRegion();
+  return region ? getCurrentUserId() : null;
 }
 
 /** The signed-in user's id, or null if nobody is signed in on this region. */
