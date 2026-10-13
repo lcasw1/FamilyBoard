@@ -45,6 +45,15 @@ Then `npx expo run:android` builds the app and installs it (the first build take
 10 minutes and several GB of disk). After that, `npx expo start` is enough until a
 native package is added.
 
+The `android/` folder is generated from `app.json` and not kept in git. After adding a
+package or changing `app.json` (for example a new permission), regenerate it before
+rebuilding, or the app won't ask for the new permission:
+
+```bash
+npx expo prebuild -p android --no-install
+npx expo run:android
+```
+
 ## Local database
 
 Needs Docker Desktop running. The Supabase CLI is a dev dependency, so use `npx supabase`.
