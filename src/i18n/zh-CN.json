@@ -14,7 +14,9 @@
     "invite_role_not_allowed": "这台平板需要使用“显示屏”邀请码。",
     "already_member": "您已经是这个家庭的成员了。",
     "invalid_email_code": "验证码错误或已过期。请重试或重新获取验证码。",
-    "region_unavailable": "当前版本的应用暂时无法连接到该家庭的服务器。"
+    "region_unavailable": "当前版本的应用暂时无法连接到该家庭的服务器。",
+    "camera_permission": "拍照需要使用相机。您可以在手机的“设置”中允许。",
+    "microphone_permission": "录制语音需要使用麦克风。您可以在手机的“设置”中允许。"
   },
   "common": {
     "continue": "继续",
@@ -73,7 +75,6 @@
   },
   "home": {
     "greeting": "{{name}}，您好",
-    "comingSoon": "发送照片、语音和留言的功能即将推出。",
     "invitesTitle": "邀请家人",
     "invite": {
       "sender": "邀请家庭成员",
@@ -85,6 +86,39 @@
     "share": "分享邀请码",
     "shareMessage": "加入我们的家庭留言板：安装应用后输入邀请码 {{code}}",
     "signOut": "退出登录"
+  },
+  "send": {
+    "title": "发给奶奶",
+    "noteLabel": "写一条留言",
+    "notePlaceholder": "例如：妈，早上好！我们都很想您。",
+    "sendNote": "发送留言",
+    "takePhoto": "拍照",
+    "choosePhoto": "选择照片",
+    "photoPreview": "即将发送的照片",
+    "captionLabel": "照片说明（可不填）",
+    "captionPlaceholder": "例如：莉莉在公园",
+    "sendPhoto": "发送照片",
+    "cancel": "取消",
+    "recordVoice": "录一段语音",
+    "recording": "正在录音… {{time}}（最长 {{max}}）",
+    "stopRecording": "停止",
+    "recorded": "语音留言，{{time}}",
+    "listen": "试听",
+    "stopListening": "停止试听",
+    "sendVoice": "发送语音",
+    "recordAgain": "删除并重新录制"
+  },
+  "messages": {
+    "title": "最近的消息",
+    "empty": "还没有消息。来发第一条吧！",
+    "from": "{{name}} · {{time}}",
+    "formerMember": "已离开的成员",
+    "hidden": "已在奶奶的平板上隐藏",
+    "photo": "照片",
+    "voice": "🎤 语音留言",
+    "delete": "删除",
+    "deleteTitle": "删除这条消息？",
+    "deleteBody": "奶奶的平板上也会删除。"
   },
   "display": {
     "waiting": "家人发来的消息会显示在这里。"

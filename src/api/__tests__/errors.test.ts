@@ -45,6 +45,8 @@ test('every error key has text in both languages', () => {
     'already_member',
     'invalid_email_code',
     'region_unavailable',
+    'camera_permission',
+    'microphone_permission',
   ];
   for (const key of keys) {
     expect(en.errors).toHaveProperty(key);

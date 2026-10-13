@@ -15,6 +15,8 @@ const KNOWN_ERRORS = [
   'invalid_email_code',
   'region_unavailable',
   'network',
+  'camera_permission',
+  'microphone_permission',
 ] as const;
 
 export type ErrorKey = (typeof KNOWN_ERRORS)[number] | 'generic';
