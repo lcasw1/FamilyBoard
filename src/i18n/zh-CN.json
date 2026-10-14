@@ -16,7 +16,10 @@
     "invalid_email_code": "验证码错误或已过期。请重试或重新获取验证码。",
     "region_unavailable": "当前版本的应用暂时无法连接到该家庭的服务器。",
     "camera_permission": "拍照需要使用相机。您可以在手机的“设置”中允许。",
-    "microphone_permission": "录制语音需要使用麦克风。您可以在手机的“设置”中允许。"
+    "microphone_permission": "录制语音需要使用麦克风。您可以在手机的“设置”中允许。",
+    "member_not_found": "此人已不在这个家庭中。",
+    "role_change_not_allowed": "奶奶的平板身份不能更改。",
+    "last_admin": "家庭至少需要一位管理员。请先把其他人设为管理员。"
   },
   "common": {
     "continue": "继续",
@@ -37,7 +40,8 @@
     "intro": "给奶奶的平板发送照片、语音和留言。",
     "join": "加入我的家庭",
     "create": "创建新家庭",
-    "tablet": "把这台平板设置给奶奶用"
+    "tablet": "把这台平板设置给奶奶用",
+    "signIn": "已经加入家庭？登录"
   },
   "join": {
     "title": "加入家庭",
@@ -75,6 +79,24 @@
   },
   "home": {
     "greeting": "{{name}}，您好",
+    "signOut": "退出登录",
+    "manageFamily": "管理家庭"
+  },
+  "family": {
+    "title": "管理家庭",
+    "membersTitle": "成员",
+    "you": "{{name}}（我）",
+    "makeRole": {
+      "sender": "设为家庭成员",
+      "aide": "设为护工",
+      "admin": "设为管理员"
+    },
+    "remove": "移出家庭",
+    "removeTitle": "要移出{{name}}吗？",
+    "removeBody": "移出后将无法查看或发送消息。已发送的消息会保留。",
+    "removeDisplayBody": "这台平板将不再收到新消息。如需再次使用，请用新的平板邀请码重新设置。",
+    "cancel": "取消",
+    "revoke": "作废此邀请码",
     "invitesTitle": "邀请家人",
     "invite": {
       "sender": "邀请家庭成员",
@@ -84,8 +106,7 @@
     },
     "inviteExpires": "只能使用一次，有效期至 {{date}}。",
     "share": "分享邀请码",
-    "shareMessage": "加入我们的家庭留言板：安装应用后输入邀请码 {{code}}",
-    "signOut": "退出登录"
+    "shareMessage": "加入我们的家庭留言板：安装应用后输入邀请码 {{code}}"
   },
   "send": {
     "title": "发给奶奶",
@@ -118,7 +139,9 @@
     "voice": "🎤 语音留言",
     "delete": "删除",
     "deleteTitle": "删除这条消息？",
-    "deleteBody": "奶奶的平板上也会删除。"
+    "deleteBody": "奶奶的平板上也会删除。",
+    "hide": "在奶奶的平板上隐藏",
+    "show": "重新在奶奶的平板上显示"
   },
   "display": {
     "waiting": "家人发来的消息会显示在这里。",
