@@ -1,6 +1,8 @@
 // Signing in and out. Family members sign in with a 6-digit code sent by email.
 // Grandma's tablet signs in anonymously once, then joins with a display invite.
-import { restoreRegion, supabase } from './client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { authStorageKey, getCurrentRegion, restoreRegion, supabase } from './client';
 import { ApiError, throwIfError, toApiError } from './errors';
 
 /** Step 1 of email sign-in: email the user a 6-digit code. Creates the account if new. */
@@ -50,6 +52,19 @@ export async function getCurrentUserId(): Promise<string | null> {
   // getSession reads the saved session from the device, so it works offline.
   const { data } = await supabase().auth.getSession();
   return data.session?.user.id ?? null;
+}
+
+/**
+ * True if a sign-in is saved on this device, even one whose token has expired.
+ *
+ * Offline, getCurrentUserId() returns null once the 1-hour token has expired,
+ * because Supabase can't renew it without the server. The saved sign-in is still
+ * there and is renewed as soon as the internet is back, so the tablet uses this
+ * to keep going offline instead of falling back to the welcome screen.
+ */
+export async function hasSavedSignIn(): Promise<boolean> {
+  const region = getCurrentRegion();
+  return region !== null && (await AsyncStorage.getItem(authStorageKey(region))) !== null;
 }
 
 /**

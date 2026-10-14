@@ -21,6 +21,8 @@ export const fontSizes = {
   // CLAUDE.md: body text on the display tablet is at least 32sp.
   display: 40,
   displayTitle: 56,
+  // The day of the week on the display's day clock.
+  clock: 80,
 } as const;
 
 export const spacing = {

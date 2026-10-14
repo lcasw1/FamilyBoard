@@ -16,6 +16,7 @@ import { Body, Button, ErrorMessage, Gap, Screen, Title } from '@/components/ui'
 import { colors, fontSizes, spacing } from '@/components/theme';
 import { useAction } from '@/hooks/use-action';
 import { useMessages } from '@/hooks/use-messages';
+import { formatDate } from '@/i18n/format-date';
 import { resetTo } from '@/navigation';
 
 // The roles an admin can invite, in the order the buttons appear.
@@ -102,7 +103,7 @@ export default function HomeScreen() {
               </Text>
               <Body muted>
                 {t('home.inviteExpires', {
-                  date: invite.expiresAt.toLocaleDateString(i18n.language),
+                  date: formatDate(invite.expiresAt, i18n.language, { dateStyle: 'medium' }),
                 })}
               </Body>
               <Button label={t('home.share')} onPress={() => shareInvite(invite.code)} />

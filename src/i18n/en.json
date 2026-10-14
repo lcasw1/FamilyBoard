@@ -121,6 +121,18 @@
     "deleteBody": "It will be removed from Grandma's tablet too."
   },
   "display": {
-    "waiting": "Messages from your family will appear here."
+    "waiting": "Messages from your family will appear here.",
+    "someone": "Your family",
+    "from": "From {{name}}, {{time}}",
+    "photoFrom": "A photo from {{name}}",
+    "voiceFrom": "{{name}} sent you a voice message",
+    "play": "▶  Play",
+    "stop": "■  Stop",
+    "partOfDay": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "night": "Night"
+    }
   }
 }

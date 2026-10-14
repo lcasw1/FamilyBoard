@@ -132,6 +132,10 @@ export async function listMyFamilies(): Promise<Membership[]> {
   }));
 }
 
+export async function getFamily(familyId: string): Promise<Family> {
+  return unwrap(await supabase().from('families').select('*').eq('id', familyId).single());
+}
+
 export async function listMembers(familyId: string): Promise<Member[]> {
   return unwrap(
     await supabase().from('members').select('*').eq('family_id', familyId).order('created_at'),

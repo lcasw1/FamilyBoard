@@ -15,6 +15,11 @@ type Client = SupabaseClient<Database>;
 const clients = new Map<Region, Client>();
 let currentRegion: Region | null = null;
 
+/** Where a region's sign-in is saved in AsyncStorage. */
+export function authStorageKey(region: Region): string {
+  return `familyboard.auth.${region}`;
+}
+
 function clientFor(region: Region): Client {
   let client = clients.get(region);
   if (!client) {
@@ -24,7 +29,7 @@ function clientFor(region: Region): Client {
         // Keep the user signed in across app restarts. Each region gets its own
         // storage key so switching regions doesn't overwrite the other session.
         storage: AsyncStorage,
-        storageKey: `familyboard.auth.${region}`,
+        storageKey: authStorageKey(region),
         persistSession: true,
         autoRefreshToken: true,
         // Only meaningful in a web browser; we never sign in through a URL.

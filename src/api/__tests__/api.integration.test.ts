@@ -6,12 +6,20 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals';
 import { createClient } from '@supabase/supabase-js';
 
-import { getCurrentUserId, sendEmailCode, signInDisplayDevice, signOut, verifyEmailCode } from '../auth';
+import {
+  getCurrentUserId,
+  hasSavedSignIn,
+  sendEmailCode,
+  signInDisplayDevice,
+  signOut,
+  verifyEmailCode,
+} from '../auth';
 import { supabase, switchRegion } from '../client';
 import { ApiError } from '../errors';
 import {
   createFamily,
   createInvite,
+  getFamily,
   listMyFamilies,
   listOpenInvites,
   redeemInvite,
@@ -159,7 +167,10 @@ test("Grandma's tablet joins with a display invite and can only read", async () 
   const messages = await listMessages(familyId);
   expect(messages).toHaveLength(1);
   expect(messages[0].caption).toBe('Hi Mom!');
+  expect((await getFamily(familyId)).display_language).toBe('zh-CN');
 
   await expect(sendTextMessage(familyId, 'hello')).rejects.toBeInstanceOf(ApiError);
+  expect(await hasSavedSignIn()).toBe(true);
   await signOut();
+  expect(await hasSavedSignIn()).toBe(false);
 });
