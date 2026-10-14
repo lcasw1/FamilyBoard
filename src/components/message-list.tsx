@@ -10,6 +10,7 @@ import type { Member, Role } from '@/api/families';
 import { getSignedUrl } from '@/api/media';
 import { deleteMessage, type Message } from '@/api/messages';
 import { useAction } from '@/hooks/use-action';
+import { formatDate } from '@/i18n/format-date';
 
 import { colors, fontSizes, spacing } from './theme';
 import { Body, Button, ErrorMessage } from './ui';
@@ -81,8 +82,8 @@ type MessageItemProps = {
 
 function MessageItem({ message, senderName, canDelete, deleting, onDelete }: MessageItemProps) {
   const { t, i18n } = useTranslation();
-  // created_at is stored in UTC; toLocaleString shows it in this phone's time zone.
-  const sentAt = new Date(message.created_at).toLocaleString(i18n.language, {
+  // created_at is stored in UTC; formatDate shows it in this phone's time zone.
+  const sentAt = formatDate(new Date(message.created_at), i18n.language, {
     dateStyle: 'medium',
     timeStyle: 'short',
   });

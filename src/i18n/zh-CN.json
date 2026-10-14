@@ -121,6 +121,18 @@
     "deleteBody": "奶奶的平板上也会删除。"
   },
   "display": {
-    "waiting": "家人发来的消息会显示在这里。"
+    "waiting": "家人发来的消息会显示在这里。",
+    "someone": "家人",
+    "from": "{{name}}发来 · {{time}}",
+    "photoFrom": "{{name}}发来的照片",
+    "voiceFrom": "{{name}}给您发了一条语音留言",
+    "play": "▶  播放",
+    "stop": "■  停止",
+    "partOfDay": {
+      "morning": "上午",
+      "afternoon": "下午",
+      "evening": "晚上",
+      "night": "夜里"
+    }
   }
 }

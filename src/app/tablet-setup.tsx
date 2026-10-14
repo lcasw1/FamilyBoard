@@ -26,8 +26,10 @@ export default function TabletSetupScreen() {
       if (!(await getCurrentUserId())) {
         await signInDisplayDevice();
       }
-      const familyId = await redeemInvite(code, name);
-      resetTo({ pathname: '/display', params: { familyId } });
+      await redeemInvite(code, name);
+      // The start screen sends the tablet on to the display, and remembers the
+      // family so the tablet can start without internet from now on.
+      resetTo('/');
     });
   }
 
