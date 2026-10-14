@@ -193,9 +193,15 @@ export type Database = {
         Returns: string;
       };
       family_id_from_path: { Args: { p_path: string }; Returns: string };
+      has_other_admin: { Args: { p_family_id: string; p_user_id: string }; Returns: boolean };
       is_anonymous: { Args: Record<PropertyKey, never>; Returns: boolean };
+      lock_family: { Args: { p_family_id: string }; Returns: undefined };
       my_role: { Args: { p_family_id: string }; Returns: string };
       redeem_invite: { Args: { p_code: string; p_display_name: string }; Returns: string };
+      set_member_role: {
+        Args: { p_family_id: string; p_role: string; p_user_id: string };
+        Returns: undefined;
+      };
     };
     Enums: {
       [_ in never]: never;

@@ -20,13 +20,17 @@ import {
   createFamily,
   createInvite,
   getFamily,
+  listMembers,
   listMyFamilies,
   listOpenInvites,
   redeemInvite,
+  removeMember,
+  revokeInvite,
+  setMemberRole,
   switchRegionForInvite,
 } from '../families';
 import { getSignedUrl, uploadBytes } from '../media';
-import { listMessages, sendTextMessage, subscribeToMessages } from '../messages';
+import { listMessages, sendTextMessage, setMessageHidden, subscribeToMessages } from '../messages';
 import { formatInviteCode } from '../region';
 
 const run = Date.now();
@@ -173,4 +177,37 @@ test("Grandma's tablet joins with a display invite and can only read", async () 
   expect(await hasSavedSignIn()).toBe(true);
   await signOut();
   expect(await hasSavedSignIn()).toBe(false);
+});
+
+test('Alice manages the family: roles, hiding, invites, removing', async () => {
+  await signInAs(aliceEmail);
+  const aliceId = (await getCurrentUserId())!;
+  const byName = async (name: string) =>
+    (await listMembers(familyId)).find((member) => member.display_name === name)!;
+
+  await setMemberRole(familyId, (await byName('Bob')).user_id, 'aide');
+  expect((await byName('Bob')).role).toBe('aide');
+  await expectApiError(
+    setMemberRole(familyId, (await byName('Grandma')).user_id, 'sender'),
+    'role_change_not_allowed',
+  );
+  await expectApiError(setMemberRole(familyId, aliceId, 'sender'), 'last_admin');
+  await expectApiError(removeMember(familyId, aliceId), 'last_admin');
+
+  const [message] = await listMessages(familyId);
+  await setMessageHidden(message.id, true);
+  // Admins still see hidden messages (marked hidden); the tablet doesn't.
+  expect((await listMessages(familyId))[0].hidden).toBe(true);
+
+  await createInvite(familyId, 'sender');
+  const [open] = await listOpenInvites(familyId);
+  await revokeInvite(open.id);
+  expect(await listOpenInvites(familyId)).toHaveLength(0);
+
+  await removeMember(familyId, (await byName('Grandma')).user_id);
+  expect((await listMembers(familyId)).map((member) => member.display_name)).toEqual([
+    'Alice',
+    'Bob',
+  ]);
+  await signOut();
 });

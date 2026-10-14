@@ -142,6 +142,27 @@ export async function listMembers(familyId: string): Promise<Member[]> {
   );
 }
 
+/**
+ * Admins only. Changes a member's role between sender, aide and admin. The
+ * database refuses to change Grandma's tablet, and to demote the last admin.
+ */
+export async function setMemberRole(familyId: string, userId: string, role: Role): Promise<void> {
+  throwIfError(
+    await supabase().rpc('set_member_role', {
+      p_family_id: familyId,
+      p_user_id: userId,
+      p_role: role,
+    }),
+  );
+}
+
+/** Admins only (or yourself, to leave). The database refuses to remove the last admin. */
+export async function removeMember(familyId: string, userId: string): Promise<void> {
+  throwIfError(
+    await supabase().from('members').delete().eq('family_id', familyId).eq('user_id', userId),
+  );
+}
+
 /** Changes the signed-in user's name in one family. */
 export async function updateMyDisplayName(familyId: string, displayName: string): Promise<void> {
   const userId = (await supabase().auth.getSession()).data.session?.user.id;

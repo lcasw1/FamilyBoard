@@ -1,6 +1,7 @@
 // The family's recent messages, newest first, as the senders see them.
 // Each message shows who sent it and when (in this phone's time zone). People
-// can delete their own messages; admins can delete any.
+// can delete their own messages; admins can delete any. Admins and aides can hide
+// a message from Grandma's tablet (for example if it might upset her) and show it again.
 import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
@@ -8,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { Member, Role } from '@/api/families';
 import { getSignedUrl } from '@/api/media';
-import { deleteMessage, type Message } from '@/api/messages';
+import { deleteMessage, setMessageHidden, type Message } from '@/api/messages';
 import { useAction } from '@/hooks/use-action';
 import { formatDate } from '@/i18n/format-date';
 
@@ -20,7 +21,8 @@ type MessageListProps = {
   members: Member[];
   currentUserId: string | null;
   role: Role;
-  onDeleted: () => void;
+  /** Called after a message is deleted, hidden or shown again. */
+  onChanged: () => void;
 };
 
 export function MessageList({
@@ -28,7 +30,7 @@ export function MessageList({
   members,
   currentUserId,
   role,
-  onDeleted,
+  onChanged,
 }: MessageListProps) {
   const { t } = useTranslation();
   const { busy, error, run } = useAction();
@@ -45,10 +47,17 @@ export function MessageList({
         onPress: () =>
           run(async () => {
             await deleteMessage(message);
-            onDeleted();
+            onChanged();
           }),
       },
     ]);
+  }
+
+  function toggleHidden(message: Message) {
+    return run(async () => {
+      await setMessageHidden(message.id, !message.hidden);
+      onChanged();
+    });
   }
 
   if (messages.length === 0) {
@@ -64,8 +73,10 @@ export function MessageList({
           message={message}
           senderName={names.get(message.sender_id) ?? t('messages.formerMember')}
           canDelete={message.sender_id === currentUserId || role === 'admin'}
-          deleting={busy}
+          canHide={role === 'admin' || role === 'aide'}
+          busy={busy}
           onDelete={() => confirmDelete(message)}
+          onToggleHidden={() => toggleHidden(message)}
         />
       ))}
     </>
@@ -76,11 +87,21 @@ type MessageItemProps = {
   message: Message;
   senderName: string;
   canDelete: boolean;
-  deleting: boolean;
+  canHide: boolean;
+  busy: boolean;
   onDelete: () => void;
+  onToggleHidden: () => void;
 };
 
-function MessageItem({ message, senderName, canDelete, deleting, onDelete }: MessageItemProps) {
+function MessageItem({
+  message,
+  senderName,
+  canDelete,
+  canHide,
+  busy,
+  onDelete,
+  onToggleHidden,
+}: MessageItemProps) {
   const { t, i18n } = useTranslation();
   // created_at is stored in UTC; formatDate shows it in this phone's time zone.
   const sentAt = formatDate(new Date(message.created_at), i18n.language, {
@@ -97,13 +118,16 @@ function MessageItem({ message, senderName, canDelete, deleting, onDelete }: Mes
       {message.type === 'photo' && message.file_path && <MessagePhoto path={message.file_path} />}
       {message.type === 'voice' && <Body>{t('messages.voice')}</Body>}
       {message.caption ? <Body>{message.caption}</Body> : null}
-      {canDelete && (
+      {canHide && (
         <Button
-          label={t('messages.delete')}
-          onPress={onDelete}
+          label={message.hidden ? t('messages.show') : t('messages.hide')}
+          onPress={onToggleHidden}
           variant="secondary"
-          disabled={deleting}
+          disabled={busy}
         />
+      )}
+      {canDelete && (
+        <Button label={t('messages.delete')} onPress={onDelete} variant="secondary" disabled={busy} />
       )}
     </View>
   );

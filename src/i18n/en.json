@@ -16,7 +16,10 @@
     "invalid_email_code": "That code is wrong or has expired. Try again or request a new code.",
     "region_unavailable": "This version of the app can't connect to that family's server yet.",
     "camera_permission": "Family Board needs the camera to take a photo. You can allow it in the phone's Settings.",
-    "microphone_permission": "Family Board needs the microphone to record a voice message. You can allow it in the phone's Settings."
+    "microphone_permission": "Family Board needs the microphone to record a voice message. You can allow it in the phone's Settings.",
+    "member_not_found": "That person isn't in the family any more.",
+    "role_change_not_allowed": "Grandma's tablet always keeps its role.",
+    "last_admin": "The family needs at least one admin. Make someone else an admin first."
   },
   "common": {
     "continue": "Continue",
@@ -37,7 +40,8 @@
     "intro": "Send photos, voice messages and notes to Grandma's tablet.",
     "join": "Join my family",
     "create": "Start a new family",
-    "tablet": "Set up this tablet for Grandma"
+    "tablet": "Set up this tablet for Grandma",
+    "signIn": "Already in a family? Sign in"
   },
   "join": {
     "title": "Join your family",
@@ -75,6 +79,24 @@
   },
   "home": {
     "greeting": "Hello, {{name}}",
+    "signOut": "Sign out",
+    "manageFamily": "Manage family"
+  },
+  "family": {
+    "title": "Manage family",
+    "membersTitle": "Members",
+    "you": "{{name}} (you)",
+    "makeRole": {
+      "sender": "Make family member",
+      "aide": "Make aide",
+      "admin": "Make admin"
+    },
+    "remove": "Remove from family",
+    "removeTitle": "Remove {{name}}?",
+    "removeBody": "They won't see or send messages any more. Messages they sent stay.",
+    "removeDisplayBody": "This tablet will stop getting new messages. To use it again, set it up with a new tablet code.",
+    "cancel": "Cancel",
+    "revoke": "Cancel this code",
     "invitesTitle": "Invite someone",
     "invite": {
       "sender": "Invite a family member",
@@ -84,8 +106,7 @@
     },
     "inviteExpires": "Works once, until {{date}}.",
     "share": "Share code",
-    "shareMessage": "Join our Family Board: install the app and enter this invite code: {{code}}",
-    "signOut": "Sign out"
+    "shareMessage": "Join our Family Board: install the app and enter this invite code: {{code}}"
   },
   "send": {
     "title": "Send to Grandma",
@@ -118,7 +139,9 @@
     "voice": "🎤 Voice message",
     "delete": "Delete",
     "deleteTitle": "Delete this message?",
-    "deleteBody": "It will be removed from Grandma's tablet too."
+    "deleteBody": "It will be removed from Grandma's tablet too.",
+    "hide": "Hide from Grandma's tablet",
+    "show": "Show on Grandma's tablet again"
   },
   "display": {
     "waiting": "Messages from your family will appear here.",

@@ -21,6 +21,16 @@ export default function WelcomeScreen() {
     });
   }
 
+  // For people already in a family, e.g. on a new phone. After signing in, the
+  // start screen finds their family. Only the US server exists for now; once the
+  // China server is running, this will need to ask which one.
+  function signIn() {
+    return run(async () => {
+      await switchRegionForNewFamily();
+      router.push('/sign-in');
+    });
+  }
+
   return (
     <Screen>
       <Stack.Screen options={{ title: t('app.name') }} />
@@ -34,6 +44,8 @@ export default function WelcomeScreen() {
         onPress={() => router.push('/tablet-setup')}
         variant="secondary"
       />
+      <Gap />
+      <Button label={t('welcome.signIn')} onPress={signIn} variant="secondary" busy={busy} />
       <ErrorMessage error={error} />
     </Screen>
   );
