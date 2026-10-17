@@ -1,0 +1,19 @@
+{
+  "cli": {
+    "version": ">= 25.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_US_URL": "https://dipesvdlmhqgoecewgho.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_US_PUBLISHABLE_KEY": "sb_publishable_y-WkkTSva-M5jqWBxHUtdQ_cU1-4KDB"
+      }
+    }
+  }
+}
