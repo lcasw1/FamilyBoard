@@ -22,17 +22,16 @@ npm run db:test           # database security tests
 
 ## Running on Android
 
+The app is built on Expo's servers (EAS), so this Mac doesn't need Java or a local
+Android build. It only needs a device to run the app on.
+
 One-time setup on a Mac:
 
 - Install Android Studio, and in its Device Manager create an emulator (or plug in an
   Android phone with USB debugging on).
-- Install **JDK 17** (React Native's supported version), for example Eclipse Temurin 17
-  into `~/Library/Java/JavaVirtualMachines/`. Android Studio's bundled Java 25 makes the
-  native build fail with "A restricted method in java.lang.System has been called".
 - Add to `~/.zshrc`:
 
   ```bash
-  export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
   export ANDROID_HOME="$HOME/Library/Android/sdk"
   export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
   ```
@@ -41,18 +40,43 @@ One-time setup on a Mac:
   `EXPO_PUBLIC_SUPABASE_US_URL=http://10.0.2.2:54321`. A real phone on Wi-Fi needs the
   Mac's LAN address instead.
 
-Then `npx expo run:android` builds the app and installs it (the first build takes about
-10 minutes and several GB of disk). After that, `npx expo start` is enough until a
-native package is added.
+### Development build
 
-The `android/` folder is generated from `app.json` and not kept in git. After adding a
-package or changing `app.json` (for example a new permission), regenerate it before
-rebuilding, or the app won't ask for the new permission:
+The development build is the app without your code in it: it loads the code from the
+dev server (`npx expo start`), so changes show up as soon as you save. Build it once:
 
 ```bash
-npx expo prebuild -p android --no-install
-npx expo run:android
+npx eas-cli build -p android --profile development
 ```
+
+When it finishes (10–30 minutes, depending on Expo's queue), open the link it prints
+on the device, or download the APK and run `adb install <file>.apk` for the emulator.
+Then day to day:
+
+```bash
+npx expo start            # press "a" to open the app on the emulator
+```
+
+Build it again only after adding a package with native code (`npx expo install` says
+so in its output) or changing `app.json`, for example a new permission. The free Expo
+plan has a monthly build limit, so don't rebuild for ordinary code changes.
+
+### APK for the family devices
+
+```bash
+npx eas-cli build -p android --profile preview
+```
+
+This builds a standalone APK with the code inside it, pointing at the hosted server
+(see `eas.json`). It needs no dev server.
+
+### Building locally (optional)
+
+`npx expo run:android` builds on this Mac instead. It needs JDK 17 (not Android
+Studio's bundled Java 25, which fails with "A restricted method in java.lang.System has
+been called"), about 10 GB of disk, and a lot of memory. The generated `android/`
+folder is not kept in git; after changing packages or `app.json`, regenerate it with
+`npx expo prebuild -p android --no-install` first.
 
 ## Local database
 
