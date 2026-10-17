@@ -89,10 +89,21 @@ anywhere else):
 
 Functions throw an `ApiError`; show it with `t(error.i18nKey)`.
 
-## Hosted Supabase setup (when we create the real project)
+## Hosted Supabase
 
-- Run the migrations: `npx supabase link` then `npx supabase db push`.
-- Auth → Sign In / Providers: turn on **Anonymous sign-ins** (for the tablet).
-- Auth → Email Templates: paste `supabase/templates/email-code.html` into both
-  **Confirm signup** and **Magic Link**, so emails contain a 6-digit code.
+The real project is `dipesvdlmhqgoecewgho` (region ca-central-1), at
+https://dipesvdlmhqgoecewgho.supabase.co. Log in once with `npx supabase login`, then
+`npx supabase link --project-ref dipesvdlmhqgoecewgho` (no database password needed).
+
+- **Schema changes:** `npx supabase db push --dry-run` to preview, then `npx supabase db push`.
+- **Auth settings** come from `supabase/config.toml`: `npx supabase config diff` to preview,
+  then `npx supabase config push`. Answer **y** for auth and **n** for storage (the storage
+  and pooler values in the file are local defaults).
+- **Email:** sign-in codes are sent through Resend (resend.com) from
+  `noreply@mail.we-familyboard.com`; the SMTP details are in the dashboard (Auth → Emails →
+  SMTP Settings), not in this repo. The domain is registered at Namecheap, with Resend's DNS
+  records (DKIM, SPF, DMARC). Supabase's own mailer can't be used: it only sends to the
+  project's team, and on the free plan its template can't be changed to show the 6-digit code.
+- **APK builds** read the server URL and publishable key from `eas.json` (both are public).
+
 Studio (a web UI for the local database) runs at http://127.0.0.1:54323.
