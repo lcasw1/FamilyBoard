@@ -151,6 +151,9 @@
     "voiceFrom": "{{name}} sent you a voice message",
     "play": "▶  Play",
     "stop": "■  Stop",
+    "earlier": "◀ Earlier",
+    "later": "Later ▶",
+    "position": "{{current}} of {{total}}",
     "partOfDay": {
       "morning": "Morning",
       "afternoon": "Afternoon",

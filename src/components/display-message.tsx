@@ -1,4 +1,4 @@
-// The newest message, shown large on Grandma's tablet:
+// One message, shown large on Grandma's tablet:
 //   - photo: the photo, with its caption underneath
 //   - note:  the text in big letters
 //   - voice: "Lily sent you a voice message" and a big Play button
@@ -6,6 +6,7 @@
 // and nothing plays by itself.
 import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { Image } from 'expo-image';
+import { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -18,9 +19,11 @@ import { colors, fontSizes, minTouchSize, spacing } from './theme';
 type DisplayMessageProps = {
   message: Message;
   senderName: string | null;
+  /** Called with true when a voice message starts playing, false when it stops. */
+  onPlayingChange?: (playing: boolean) => void;
 };
 
-export function DisplayMessage({ message, senderName }: DisplayMessageProps) {
+export function DisplayMessage({ message, senderName, onPlayingChange }: DisplayMessageProps) {
   const { t, i18n } = useTranslation();
   const name = senderName ?? t('display.someone');
   // created_at is stored in UTC; this shows it in the tablet's time zone,
@@ -49,7 +52,7 @@ export function DisplayMessage({ message, senderName }: DisplayMessageProps) {
       {message.type === 'voice' && (
         <View style={styles.voice}>
           <Text style={styles.text}>{t('display.voiceFrom', { name })}</Text>
-          {fileUri && <PlayButton uri={fileUri} />}
+          {fileUri && <PlayButton uri={fileUri} onPlayingChange={onPlayingChange} />}
         </View>
       )}
 
@@ -67,11 +70,24 @@ export function DisplayMessage({ message, senderName }: DisplayMessageProps) {
 }
 
 /** Play / Stop for a voice message. Always starts from the beginning. */
-function PlayButton({ uri }: { uri: string }) {
+function PlayButton({
+  uri,
+  onPlayingChange,
+}: {
+  uri: string;
+  onPlayingChange?: (playing: boolean) => void;
+}) {
   const { t } = useTranslation();
   // A new message gives a new `uri`, and with it a fresh player that isn't playing.
   const player = useAudioPlayer(uri);
   const status = useAudioPlayerStatus(player);
+
+  // Tell the screen whether we're playing, so it doesn't move on mid-message. The
+  // cleanup also reports "stopped" when the button goes away (another message shown).
+  useEffect(() => {
+    onPlayingChange?.(status.playing);
+    return () => onPlayingChange?.(false);
+  }, [status.playing, onPlayingChange]);
 
   async function onPress() {
     if (status.playing) {
@@ -90,9 +106,7 @@ function PlayButton({ uri }: { uri: string }) {
       accessibilityRole="button"
       style={({ pressed }) => [styles.playButton, pressed && styles.playButtonPressed]}
     >
-      <Text style={styles.playLabel}>
-        {status.playing ? t('display.stop') : t('display.play')}
-      </Text>
+      <Text style={styles.playLabel}>{status.playing ? t('display.stop') : t('display.play')}</Text>
     </Pressable>
   );
 }
