@@ -22,8 +22,8 @@ test('reads back a display snapshot, with or without messages', () => {
   const two = {
     language: 'en',
     items: [
-      { message: { id: 'm2', type: 'text' }, senderName: 'Lily' },
-      { message: { id: 'm1', type: 'photo' }, senderName: null },
+      { message: { id: 'm2', type: 'text' }, senderName: 'Lily', senderPhotoPath: 'f1/lily.jpg' },
+      { message: { id: 'm1', type: 'photo' }, senderName: null, senderPhotoPath: null },
     ],
   };
   expect(parseDisplaySnapshot(JSON.stringify(two))).toEqual(two);
@@ -36,7 +36,18 @@ test('reads a snapshot saved by the older one-message version', () => {
   const old = { language: 'en', message: { id: 'm1', type: 'text' }, senderName: 'Lily' };
   expect(parseDisplaySnapshot(JSON.stringify(old))).toEqual({
     language: 'en',
+    items: [{ message: { id: 'm1', type: 'text' }, senderName: 'Lily', senderPhotoPath: null }],
+  });
+});
+
+test('reads items saved before profile photos existed', () => {
+  const saved = {
+    language: 'en',
     items: [{ message: { id: 'm1', type: 'text' }, senderName: 'Lily' }],
+  };
+  expect(parseDisplaySnapshot(JSON.stringify(saved))).toEqual({
+    language: 'en',
+    items: [{ message: { id: 'm1', type: 'text' }, senderName: 'Lily', senderPhotoPath: null }],
   });
 });
 

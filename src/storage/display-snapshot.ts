@@ -18,6 +18,8 @@ export type DisplayItem = {
   message: Message;
   /** Who sent it, e.g. 'Lily'. Null if they have left the family. */
   senderName: string | null;
+  /** The sender's profile photo, downloaded with the message. Null if they have none. */
+  senderPhotoPath: string | null;
 };
 
 export type DisplaySnapshot = {
@@ -53,7 +55,16 @@ function keyFor(familyId: string): string {
 function isItem(value: unknown): value is DisplayItem {
   const item = value as DisplayItem | null;
   const senderOk = item?.senderName === null || typeof item?.senderName === 'string';
-  return typeof item?.message?.id === 'string' && senderOk;
+  const photoOk = item?.senderPhotoPath === null || typeof item?.senderPhotoPath === 'string';
+  return typeof item?.message?.id === 'string' && senderOk && photoOk;
+}
+
+/** Items saved before profile photos existed have no senderPhotoPath: read it as null. */
+function withPhotoPath(value: unknown): unknown {
+  const item = value as Record<string, unknown> | null;
+  return item && typeof item === 'object' && !('senderPhotoPath' in item)
+    ? { ...item, senderPhotoPath: null }
+    : item;
 }
 
 /** Turns the saved text back into a snapshot, or null if it is missing or damaged. */
@@ -66,15 +77,16 @@ export function parseDisplaySnapshot(saved: string | null): DisplaySnapshot | nu
     if (value?.language !== 'en' && value?.language !== 'zh-CN') {
       return null;
     }
-    if (Array.isArray(value.items) && value.items.every(isItem)) {
-      return { language: value.language, items: value.items };
+    if (Array.isArray(value.items)) {
+      const items = value.items.map(withPhotoPath);
+      return items.every(isItem) ? { language: value.language, items } : null;
     }
     // Saved by an older version of the app, which kept only the newest message:
     // { language, message, senderName }. Read it as a list of zero or one.
     if (value.message === null) {
       return { language: value.language, items: [] };
     }
-    const oldItem = { message: value.message, senderName: value.senderName };
+    const oldItem = { message: value.message, senderName: value.senderName, senderPhotoPath: null };
     if (isItem(oldItem)) {
       return { language: value.language, items: [oldItem] };
     }

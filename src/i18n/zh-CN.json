@@ -80,7 +80,8 @@
   "home": {
     "greeting": "{{name}}，您好",
     "signOut": "退出登录",
-    "manageFamily": "管理家庭"
+    "manageFamily": "管理家庭",
+    "editProfile": "修改我的名字和照片"
   },
   "family": {
     "title": "管理家庭",
@@ -106,7 +107,8 @@
     },
     "inviteExpires": "只能使用一次，有效期至 {{date}}。",
     "share": "分享邀请码",
-    "shareMessage": "加入我们的家庭留言板：安装应用后输入邀请码 {{code}}"
+    "shareMessage": "加入我们的家庭留言板：安装应用后输入邀请码 {{code}}",
+    "editProfile": "修改名字和照片"
   },
   "send": {
     "title": "发给奶奶",
@@ -160,5 +162,15 @@
       "evening": "晚上",
       "night": "夜里"
     }
+  },
+  "profile": {
+    "title": "名字和照片",
+    "photoHint": "清楚的正脸照片能帮奶奶认出是谁发来的消息。",
+    "removePhoto": "删除照片",
+    "nameLabelOther": "称呼（奶奶怎么叫）",
+    "save": "保存"
+  },
+  "avatar": {
+    "label": "{{name}}的照片"
   }
 }

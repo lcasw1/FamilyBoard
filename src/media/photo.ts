@@ -44,3 +44,21 @@ export async function preparePhotoForSending(
   const result = await image.saveAsync({ format: SaveFormat.JPEG, compress: JPEG_QUALITY });
   return result.uri;
 }
+
+/** Profile photos are shown small (at most a few hundred pixels), so 512 is plenty. */
+export const MAX_AVATAR_EDGE = 512;
+
+/**
+ * Returns the URI of a small JPEG copy of a profile photo. The photo picker has
+ * already cropped it to a square (allowsEditing with aspect 1:1).
+ */
+export async function prepareAvatar(uri: string, width: number, height: number): Promise<string> {
+  const context = ImageManipulator.manipulate(uri);
+  const size = resizeFor(width, height, MAX_AVATAR_EDGE);
+  if (size) {
+    context.resize(size);
+  }
+  const image = await context.renderAsync();
+  const result = await image.saveAsync({ format: SaveFormat.JPEG, compress: JPEG_QUALITY });
+  return result.uri;
+}

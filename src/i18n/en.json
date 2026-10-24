@@ -80,7 +80,8 @@
   "home": {
     "greeting": "Hello, {{name}}",
     "signOut": "Sign out",
-    "manageFamily": "Manage family"
+    "manageFamily": "Manage family",
+    "editProfile": "Edit my name and photo"
   },
   "family": {
     "title": "Manage family",
@@ -106,7 +107,8 @@
     },
     "inviteExpires": "Works once, until {{date}}.",
     "share": "Share code",
-    "shareMessage": "Join our Family Board: install the app and enter this invite code: {{code}}"
+    "shareMessage": "Join our Family Board: install the app and enter this invite code: {{code}}",
+    "editProfile": "Edit name and photo"
   },
   "send": {
     "title": "Send to Grandma",
@@ -160,5 +162,15 @@
       "evening": "Evening",
       "night": "Night"
     }
+  },
+  "profile": {
+    "title": "Name and photo",
+    "photoHint": "A clear photo of the face helps Grandma see who a message is from.",
+    "removePhoto": "Remove photo",
+    "nameLabelOther": "Name, as Grandma knows them",
+    "save": "Save"
+  },
+  "avatar": {
+    "label": "Photo of {{name}}"
   }
 }

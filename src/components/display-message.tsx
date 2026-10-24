@@ -14,16 +14,24 @@ import { cachedMediaUri } from '@/api/media';
 import type { Message } from '@/api/messages';
 import { formatDate } from '@/i18n/format-date';
 
+import { Avatar } from './avatar';
 import { colors, fontSizes, minTouchSize, spacing } from './theme';
 
 type DisplayMessageProps = {
   message: Message;
   senderName: string | null;
+  /** The sender's profile photo (already on the tablet; see useDisplayFeed). */
+  senderPhotoPath?: string | null;
   /** Called with true when a voice message starts playing, false when it stops. */
   onPlayingChange?: (playing: boolean) => void;
 };
 
-export function DisplayMessage({ message, senderName, onPlayingChange }: DisplayMessageProps) {
+export function DisplayMessage({
+  message,
+  senderName,
+  senderPhotoPath,
+  onPlayingChange,
+}: DisplayMessageProps) {
   const { t, i18n } = useTranslation();
   const name = senderName ?? t('display.someone');
   // created_at is stored in UTC; this shows it in the tablet's time zone,
@@ -38,7 +46,11 @@ export function DisplayMessage({ message, senderName, onPlayingChange }: Display
 
   return (
     <View style={styles.message}>
-      <Text style={styles.from}>{t('display.from', { name, time: sentAt })}</Text>
+      {/* A familiar face next to the name helps Grandma see who it's from. */}
+      <View style={styles.sender}>
+        <Avatar name={name} photoPath={senderPhotoPath} size={AVATAR_SIZE} />
+        <Text style={styles.from}>{t('display.from', { name, time: sentAt })}</Text>
+      </View>
 
       {message.type === 'photo' && fileUri && (
         <Image
@@ -111,9 +123,15 @@ function PlayButton({
   );
 }
 
+// Big enough to recognise a face from across the room.
+const AVATAR_SIZE = 120;
+
 const styles = StyleSheet.create({
+  sender: { flexDirection: 'row', alignItems: 'center', gap: spacing.large },
   message: { flex: 1, gap: spacing.large, alignItems: 'center', justifyContent: 'center' },
   from: {
+    // flexShrink lets the text wrap beside the photo instead of pushing it off.
+    flexShrink: 1,
     fontSize: fontSizes.display,
     fontWeight: '600',
     color: colors.textMuted,

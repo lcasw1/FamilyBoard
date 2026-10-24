@@ -59,6 +59,7 @@ export default function DisplayScreen() {
             key={shown.message.id}
             message={shown.message}
             senderName={shown.senderName}
+            senderPhotoPath={shown.senderPhotoPath}
             onPlayingChange={setPlaying}
           />
         ) : (

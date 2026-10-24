@@ -28,6 +28,7 @@ import {
   revokeInvite,
   setMemberRole,
   switchRegionForInvite,
+  updateMemberProfile,
 } from '../families';
 import { getSignedUrl, uploadBytes } from '../media';
 import { listMessages, sendTextMessage, setMessageHidden, subscribeToMessages } from '../messages';
@@ -55,7 +56,9 @@ async function signInAs(email: string): Promise<void> {
 async function readEmailedCode(email: string): Promise<string> {
   const mailpit = process.env.TEST_MAILPIT_URL!;
   for (let attempt = 0; attempt < 20; attempt++) {
-    const search = await fetch(`${mailpit}/api/v1/search?query=${encodeURIComponent(`to:"${email}"`)}`);
+    const search = await fetch(
+      `${mailpit}/api/v1/search?query=${encodeURIComponent(`to:"${email}"`)}`,
+    );
     const { messages } = (await search.json()) as { messages: { ID: string }[] };
     if (messages.length > 0) {
       const message = await fetch(`${mailpit}/api/v1/message/${messages[0].ID}`);
@@ -177,6 +180,32 @@ test("Grandma's tablet joins with a display invite and can only read", async () 
   expect(await hasSavedSignIn()).toBe(true);
   await signOut();
   expect(await hasSavedSignIn()).toBe(false);
+});
+
+test("names and photos: your own, and admins can change anyone's", async () => {
+  await signInAs(bobEmail);
+  const bobId = (await getCurrentUserId())!;
+  const members = await listMembers(familyId);
+  const alice = members.find((member) => member.display_name === 'Alice')!;
+
+  const photo = await uploadBytes(familyId, new Uint8Array([0xff, 0xd8, 0xff]), 'jpg');
+  await updateMemberProfile(familyId, bobId, { displayName: '  Bobby ', photoPath: photo });
+  const bob = (await listMembers(familyId)).find((member) => member.user_id === bobId)!;
+  expect(bob.display_name).toBe('Bobby');
+  expect(bob.photo_path).toBe(photo);
+  // The database skips rows Bob may not change; the app reports that as not_allowed.
+  await expectApiError(
+    updateMemberProfile(familyId, alice.user_id, { displayName: 'Hi' }),
+    'not_allowed',
+  );
+  await signOut();
+
+  await signInAs(aliceEmail);
+  await updateMemberProfile(familyId, bobId, { displayName: 'Bob', photoPath: null });
+  const renamed = (await listMembers(familyId)).find((member) => member.user_id === bobId)!;
+  expect(renamed.display_name).toBe('Bob');
+  expect(renamed.photo_path).toBeNull();
+  await signOut();
 });
 
 test('Alice manages the family: roles, hiding, invites, removing', async () => {

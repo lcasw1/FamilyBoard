@@ -23,6 +23,8 @@ export type Membership = {
   family: Family;
   role: Role;
   displayName: string;
+  /** The profile photo in the family's storage, or null. */
+  photoPath: string | null;
 };
 
 /** Creates a family on the current region's server; the caller becomes its admin. */
@@ -121,7 +123,7 @@ export async function listMyFamilies(): Promise<Membership[]> {
   const rows = unwrap(
     await supabase()
       .from('members')
-      .select('role, display_name, families(*)')
+      .select('role, display_name, photo_path, families(*)')
       .eq('user_id', userId)
       .order('created_at'),
   );
@@ -129,6 +131,7 @@ export async function listMyFamilies(): Promise<Membership[]> {
     family: row.families,
     role: row.role as Role,
     displayName: row.display_name,
+    photoPath: row.photo_path,
   }));
 }
 
@@ -163,16 +166,37 @@ export async function removeMember(familyId: string, userId: string): Promise<vo
   );
 }
 
-/** Changes the signed-in user's name in one family. */
-export async function updateMyDisplayName(familyId: string, displayName: string): Promise<void> {
-  const userId = (await supabase().auth.getSession()).data.session?.user.id;
-  throwIfError(
+/**
+ * Changes a member's name and/or profile photo. Anyone can change their own;
+ * admins can change anyone's in their family (the database checks this).
+ * Pass only what changes, e.g. { displayName: 'Lily' } or { photoPath: null }
+ * to remove the photo.
+ */
+export async function updateMemberProfile(
+  familyId: string,
+  userId: string,
+  changes: { displayName?: string; photoPath?: string | null },
+): Promise<void> {
+  const update: { display_name?: string; photo_path?: string | null } = {};
+  if (changes.displayName !== undefined) {
+    update.display_name = changes.displayName.trim();
+  }
+  if (changes.photoPath !== undefined) {
+    update.photo_path = changes.photoPath;
+  }
+  // `.select()` returns the changed rows. The database silently skips rows you may
+  // not change, so no rows back means "not allowed" rather than success.
+  const rows = unwrap(
     await supabase()
       .from('members')
-      .update({ display_name: displayName.trim() })
+      .update(update)
       .eq('family_id', familyId)
-      .eq('user_id', userId ?? ''),
+      .eq('user_id', userId)
+      .select('user_id'),
   );
+  if (rows.length === 0) {
+    throw new ApiError('not_allowed');
+  }
 }
 
 /**

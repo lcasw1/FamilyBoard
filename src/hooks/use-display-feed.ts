@@ -24,10 +24,21 @@ import {
   MAX_RECENT_MESSAGES,
   recentForDisplay,
   saveDisplaySnapshot,
+  type DisplayItem,
   type DisplaySnapshot,
 } from '@/storage/display-snapshot';
 
 const REFRESH_INTERVAL_MS = 2 * 60 * 1000;
+
+/** Every file the tablet needs on the device for these items. */
+function snapshotFilePaths(items: DisplayItem[]): string[] {
+  const paths: string[] = [];
+  for (const { message, senderPhotoPath } of items) {
+    if (message.file_path) paths.push(message.file_path);
+    if (senderPhotoPath) paths.push(senderPhotoPath);
+  }
+  return paths;
+}
 
 /** Fetches the recent messages and makes sure all their files are on the device. */
 async function fetchSnapshot(familyId: string): Promise<DisplaySnapshot> {
@@ -39,16 +50,19 @@ async function fetchSnapshot(familyId: string): Promise<DisplaySnapshot> {
     listMembers(familyId),
   ]);
   const recent = recentForDisplay(messages, new Date());
-  // Download every file before switching, so whichever message is on screen works
-  // offline. If one download fails, the whole refresh fails and nothing changes.
-  await Promise.all(
-    recent.map((message) => (message.file_path ? cacheMedia(message.file_path) : null)),
-  );
-  const items = recent.map((message) => ({
-    message,
-    senderName:
-      members.find((member) => member.user_id === message.sender_id)?.display_name ?? null,
-  }));
+  const items = recent.map((message) => {
+    const sender = members.find((member) => member.user_id === message.sender_id);
+    return {
+      message,
+      senderName: sender?.display_name ?? null,
+      senderPhotoPath: sender?.photo_path ?? null,
+    };
+  });
+  // Download every file (photos, voice, senders' profile photos) before switching,
+  // so whichever message is on screen works offline. If one download fails, the
+  // whole refresh fails and nothing changes.
+  const paths = new Set(snapshotFilePaths(items));
+  await Promise.all([...paths].map((path) => cacheMedia(path)));
   const language: Language = family.display_language === 'zh-CN' ? 'zh-CN' : 'en';
   return { language, items };
 }
@@ -80,9 +94,8 @@ export function useDisplayFeed(familyId: string): DisplaySnapshot | null {
         }
         setSnapshot(fresh);
         saveDisplaySnapshot(familyId, fresh).catch(() => {});
-        // Delete downloaded files of messages that are no longer shown.
-        const filePaths = fresh.items.map(({ message }) => message.file_path);
-        pruneMediaCache(filePaths.filter((path) => path !== null));
+        // Delete downloaded files that are no longer shown.
+        pruneMediaCache(snapshotFilePaths(fresh.items));
       },
       () => {
         // Offline or a server problem: keep showing the current snapshot.
