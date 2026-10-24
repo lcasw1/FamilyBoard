@@ -3,8 +3,8 @@
 //
 // The database enforces all of this (only admins, never the last admin, the
 // tablet keeps its role); this screen just offers the buttons that make sense.
-import { Stack, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { router, Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { Alert, Share, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +22,7 @@ import {
   type Role,
 } from '@/api/families';
 import { formatInviteCode } from '@/api/region';
+import { Avatar } from '@/components/avatar';
 import { colors, fontSizes, spacing } from '@/components/theme';
 import { Body, Button, ErrorMessage, Gap, Screen, Title } from '@/components/ui';
 import { useAction } from '@/hooks/use-action';
@@ -55,9 +56,8 @@ export default function FamilyScreen() {
     );
   }, [familyId]);
 
-  useEffect(() => {
-    reload();
-  }, [reload]);
+  // Load when the screen opens, and again when coming back from editing a profile.
+  useFocusEffect(reload);
 
   function changeRole(member: Member, role: Role) {
     return run(async () => {
@@ -112,6 +112,9 @@ export default function FamilyScreen() {
           busy={busy}
           onChangeRole={(role) => changeRole(member, role)}
           onRemove={() => confirmRemove(member)}
+          onEditProfile={() =>
+            router.push({ pathname: '/profile', params: { familyId, userId: member.user_id } })
+          }
         />
       ))}
 
@@ -141,9 +144,17 @@ type MemberCardProps = {
   busy: boolean;
   onChangeRole: (role: Role) => void;
   onRemove: () => void;
+  onEditProfile: () => void;
 };
 
-function MemberCard({ member, isYou, busy, onChangeRole, onRemove }: MemberCardProps) {
+function MemberCard({
+  member,
+  isYou,
+  busy,
+  onChangeRole,
+  onRemove,
+  onEditProfile,
+}: MemberCardProps) {
   const { t } = useTranslation();
   const role = member.role as Role;
   // Admins don't change or remove themselves here, so nobody locks themselves
@@ -152,10 +163,21 @@ function MemberCard({ member, isYou, busy, onChangeRole, onRemove }: MemberCardP
 
   return (
     <View style={styles.card}>
-      <Text style={styles.name}>
-        {isYou ? t('family.you', { name: member.display_name }) : member.display_name}
-      </Text>
-      <Body muted>{t(`roles.${role}`)}</Body>
+      <View style={styles.header}>
+        <Avatar name={member.display_name} photoPath={member.photo_path} size={64} />
+        <View style={styles.headerText}>
+          <Text style={styles.name}>
+            {isYou ? t('family.you', { name: member.display_name }) : member.display_name}
+          </Text>
+          <Body muted>{t(`roles.${role}`)}</Body>
+        </View>
+      </View>
+      <Button
+        label={t('family.editProfile')}
+        onPress={onEditProfile}
+        variant="secondary"
+        disabled={busy}
+      />
       {otherRoles.map((newRole) => (
         <Button
           key={newRole}
@@ -213,6 +235,8 @@ const styles = StyleSheet.create({
     padding: spacing.large,
     gap: spacing.medium,
   },
+  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.medium },
+  headerText: { flex: 1 },
   name: { fontSize: fontSizes.title, fontWeight: '700', color: colors.text },
   code: {
     fontSize: fontSizes.large,

@@ -13,6 +13,7 @@ import { deleteMessage, setMessageHidden, type Message } from '@/api/messages';
 import { useAction } from '@/hooks/use-action';
 import { formatDate } from '@/i18n/format-date';
 
+import { Avatar } from './avatar';
 import { colors, fontSizes, spacing } from './theme';
 import { Body, Button, ErrorMessage } from './ui';
 
@@ -35,8 +36,8 @@ export function MessageList({
   const { t } = useTranslation();
   const { busy, error, run } = useAction();
 
-  // user id -> display name, e.g. { 'a1b2...': 'Lily' }.
-  const names = new Map(members.map((member) => [member.user_id, member.display_name]));
+  // user id -> member, to look up each sender's name and photo.
+  const byId = new Map(members.map((member) => [member.user_id, member]));
 
   function confirmDelete(message: Message) {
     Alert.alert(t('messages.deleteTitle'), t('messages.deleteBody'), [
@@ -71,7 +72,8 @@ export function MessageList({
         <MessageItem
           key={message.id}
           message={message}
-          senderName={names.get(message.sender_id) ?? t('messages.formerMember')}
+          senderName={byId.get(message.sender_id)?.display_name ?? t('messages.formerMember')}
+          senderPhotoPath={byId.get(message.sender_id)?.photo_path ?? null}
           canDelete={message.sender_id === currentUserId || role === 'admin'}
           canHide={role === 'admin' || role === 'aide'}
           busy={busy}
@@ -86,6 +88,7 @@ export function MessageList({
 type MessageItemProps = {
   message: Message;
   senderName: string;
+  senderPhotoPath: string | null;
   canDelete: boolean;
   canHide: boolean;
   busy: boolean;
@@ -96,6 +99,7 @@ type MessageItemProps = {
 function MessageItem({
   message,
   senderName,
+  senderPhotoPath,
   canDelete,
   canHide,
   busy,
@@ -111,9 +115,10 @@ function MessageItem({
 
   return (
     <View style={styles.item}>
-      <Text style={styles.meta}>
-        {t('messages.from', { name: senderName, time: sentAt })}
-      </Text>
+      <View style={styles.header}>
+        <Avatar name={senderName} photoPath={senderPhotoPath} size={48} />
+        <Text style={styles.meta}>{t('messages.from', { name: senderName, time: sentAt })}</Text>
+      </View>
       {message.hidden && <Text style={styles.hidden}>{t('messages.hidden')}</Text>}
       {message.type === 'photo' && message.file_path && <MessagePhoto path={message.file_path} />}
       {message.type === 'voice' && <Body>{t('messages.voice')}</Body>}
@@ -127,7 +132,12 @@ function MessageItem({
         />
       )}
       {canDelete && (
-        <Button label={t('messages.delete')} onPress={onDelete} variant="secondary" disabled={busy} />
+        <Button
+          label={t('messages.delete')}
+          onPress={onDelete}
+          variant="secondary"
+          disabled={busy}
+        />
       )}
     </View>
   );
@@ -174,7 +184,9 @@ const styles = StyleSheet.create({
     padding: spacing.medium,
     gap: spacing.small,
   },
-  meta: { fontSize: fontSizes.body, fontWeight: '600', color: colors.textMuted },
+  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.small },
+  // flex: 1 lets the line wrap beside the photo instead of running off the screen.
+  meta: { flex: 1, fontSize: fontSizes.body, fontWeight: '600', color: colors.textMuted },
   hidden: { fontSize: fontSizes.body, fontStyle: 'italic', color: colors.textMuted },
   photo: {
     width: '100%',
