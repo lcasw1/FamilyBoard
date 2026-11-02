@@ -129,5 +129,9 @@ https://dipesvdlmhqgoecewgho.supabase.co. Log in once with `npx supabase login`,
   records (DKIM, SPF, DMARC). Supabase's own mailer can't be used: it only sends to the
   project's team, and on the free plan its template can't be changed to show the 6-digit code.
 - **APK builds** read the server URL and publishable key from `eas.json` (both are public).
+- **Pausing:** the free plan pauses a project after about a week without activity (it can be
+  restored from the dashboard, data intact). The GitHub Actions job
+  `.github/workflows/keep-supabase-awake.yml` makes one harmless request every 3 days, and
+  fails (GitHub sends an email) if the project doesn't answer.
 
 Studio (a web UI for the local database) runs at http://127.0.0.1:54323.
