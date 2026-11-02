@@ -1,0 +1,47 @@
+# Keeps the hosted Supabase project from being paused.
+#
+# On the free plan, Supabase pauses a project after about a week without
+# activity. Once Grandma's tablet is running it checks in every 2 minutes, which
+# is plenty; until then (or if it's offline for a long time), this job makes one
+# harmless request every 3 days.
+#
+# The request reads the families table while signed out, so the security rules
+# refuse it (HTTP 401) and nothing is returned or changed. That still counts as
+# database activity. It only uses the public "publishable" key from eas.json; no
+# secrets are needed.
+#
+# If the project is already paused (or down), the job fails, and GitHub emails
+# whoever last changed this file. Then restore the project in the Supabase dashboard.
+name: Keep Supabase awake
+
+on:
+  schedule:
+    # At 15:00 UTC on every third day of the month (1st, 4th, 7th, ...).
+    - cron: '0 15 */3 * *'
+  # Also allows running it by hand: Actions tab -> Keep Supabase awake -> Run workflow.
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make one read request to the hosted project
+        run: |
+          # The server address and public key, read from the APK build settings.
+          URL=$(jq -r '.build.preview.env.EXPO_PUBLIC_SUPABASE_US_URL' eas.json)
+          KEY=$(jq -r '.build.preview.env.EXPO_PUBLIC_SUPABASE_US_PUBLISHABLE_KEY' eas.json)
+
+          STATUS=$(curl --silent --output /dev/null --write-out '%{http_code}' \
+            --max-time 30 --retry 3 --retry-delay 10 \
+            "$URL/rest/v1/families?select=id&limit=1" -H "apikey: $KEY")
+          echo "Supabase answered with HTTP $STATUS"
+
+          # 200 or 401 means the database is up and answered. Anything else
+          # (000 = no answer, 5xx = paused or down) fails the job.
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "401" ]; then
+            echo "::error::Supabase did not answer normally (HTTP $STATUS). Check the dashboard; the project may be paused."
+            exit 1
+          fi
